@@ -15,12 +15,12 @@ class CreateEmployeersTable extends Migration
     {
         Schema::create('employeers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete(); // Relaciona com a tabela users
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->date('birth_date')->index()->nullable();
             $table->string('cpf')->unique()->index();
             $table->string('cep')->index()->nullable();
             $table->text('address')->nullable();
-            $table->foreignId('manager_id')->nullable()->constrained('users')->nullOnDelete(); // Relaciona o funcionário ao gestor
+            $table->foreignId('manager_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
     }
