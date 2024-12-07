@@ -1,5 +1,6 @@
 services:
-    laravel.test:
+    php:
+        container_name: ${APP_NAME}_php
         build:
             context: './vendor/laravel/sail/runtimes/8.4'
             dockerfile: Dockerfile
@@ -25,7 +26,8 @@ services:
             - mysql
             - redis
     mysql:
-        image: 'mysql/mysql-server:8.0'
+        container_name: ${APP_NAME}_mysql
+        image: 'mysql/mysql-server:latest'
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
         environment:
@@ -49,6 +51,7 @@ services:
             retries: 3
             timeout: 5s
     redis:
+        container_name: ${APP_NAME}_redis
         image: 'redis:alpine'
         ports:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
