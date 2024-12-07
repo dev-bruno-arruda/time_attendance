@@ -11,7 +11,7 @@ use Tests\TestCase;
 class AuthControllerTest extends TestCase
 {
     use RefreshDatabase;
-
+    
     protected function setUp(): void
     {
         parent::setUp();
@@ -23,7 +23,7 @@ class AuthControllerTest extends TestCase
         
         $user = User::where('role', 'admin')->first();
 
-        $response = $this->postJson('/login', [
+        $response = $this->postJson('/api/login', [
             'email' => $user->email,
             'password' => 'password123',
         ]);
@@ -34,7 +34,7 @@ class AuthControllerTest extends TestCase
 
     public function test_login_validation_error()
     {
-        $response = $this->postJson('/login', [
+        $response = $this->postJson('/api/login', [
             'email' => 'not-an-email',
             'password' => '',
         ]);
@@ -47,12 +47,16 @@ class AuthControllerTest extends TestCase
     {
         $user = User::where('role', 'admin')->first();
 
-        $response = $this->postJson('/login', [
+        $response = $this->postJson('/api/login', [
             'email' => $user->email,
             'password' => 'wrongpassword',
         ]);
 
-        $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['email']);
+        $response->assertStatus(422);
+
+        $response->assertJson([
+            'message' => 'Login fail',
+            'status' => 'error',
+        ]);
     }
 }
