@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Services\AuthService;
 use App\Http\Requests\AuthRequest;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Log;
+use App\Http\Resources\UserResource;
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -20,7 +23,7 @@ class AuthController extends Controller
     /**
      * Login the user and return the token.
      *
-     * @param Request $request
+     * @param AuthRequest $request
      * @return JsonResponse
      */
     public function login(AuthRequest $request): JsonResponse
@@ -50,5 +53,26 @@ class AuthController extends Controller
             $this->authService->logout($request);
         
         return response()->json(['message' => 'Logged out successfully'], 200);
+    }
+
+     /**
+     * Get the authenticated user.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function profile(Request $request): JsonResponse | JsonResource
+    {
+
+        $user = $this->authService->getUser($request);
+
+        return response()->json(
+            [
+                'message' => 'User retrieved successfully',
+                'status' => 'success',
+                'data' => new UserResource($user)
+            ],
+            Response::HTTP_OK
+        );
     }
 }

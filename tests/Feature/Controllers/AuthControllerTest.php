@@ -83,4 +83,33 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(401);
 
     }
+    
+    public function test_profile_successful()
+    {
+        $user = User::where('role', 'admin')->first();
+
+        $token = $user->createToken('test')->plainTextToken;
+
+        $response = $this->withHeader('Authorization', "Bearer $token")
+                         ->getJson('/api/profile');
+
+        $response->assertStatus(200)
+                 ->assertJsonStructure([
+                     'message',
+                     'status',
+                     'data' => [
+                         'type',
+                         'id',
+                         'attributes' => [
+                             'name',
+                             'email',
+                             'role',
+                         ],
+                         'links' => [
+                             'self',
+                         ],
+                     ],
+                 ]);
+    }
+
 }
