@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /vendor/
 node_modules/
 npm-debug.log
@@ -46,4 +45,5 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
->>>>>>> 2783cb4 (Add initial project structure)
+/coverage
+/coverage/
