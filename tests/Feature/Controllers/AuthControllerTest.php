@@ -59,4 +59,28 @@ class AuthControllerTest extends TestCase
             'status' => 'error',
         ]);
     }
+
+    public function test_logout_successful()
+    {
+        $user = User::where('role', 'admin')->first();
+
+        $token = $user->createToken('test')->plainTextToken;
+
+        $response = $this->withHeader('Authorization', "Bearer $token")
+                         ->postJson('/api/logout');
+
+        $response->assertStatus(200)
+                 ->assertJson(['message' => 'Logged out successfully']);
+    }
+
+    public function test_logout_unauthenticated()
+    {
+        $response = $this->postJson('/api/logout');
+
+        $response->assertJson([
+            'message' => 'Unauthenticated.',
+        ]);
+        $response->assertStatus(401);
+
+    }
 }
