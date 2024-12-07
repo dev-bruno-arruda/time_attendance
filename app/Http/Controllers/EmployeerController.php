@@ -49,15 +49,23 @@ class EmployeerController extends Controller
      */
     public function show($id): JsonResponse | JsonResource
     {
-        $employeer = $this->employeerService->findEmployeerWithUser($id);
-    
-        if (!$employeer) {
-            return response()->json(['error' => 'Employeer not found'], Response::HTTP_NOT_FOUND);
+        try {
+
+            $employeer = $this->employeerService->getEmployeer($id);
+
+            return response()->json([
+                'message' => 'Retrieved successfully',
+                'status' => 'success',
+                'data' => new EmployeerResource($employeer)
+            ], 200, [], JSON_PRETTY_PRINT);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => 'error',
+            ], 403);
         }
-    
-        return new EmployeerResource($employeer);
-    }
-    
+    }   
 
     /**
      * Update the specified resource in storage.

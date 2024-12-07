@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Models\Employeer;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class EmployeerService extends BaseService
 {
@@ -21,6 +22,18 @@ class EmployeerService extends BaseService
         return $this->employeer->where('id', $id)
             ->with('user')
             ->first();
+    }
+
+     
+    public function getEmployeer(int $id)
+    {
+        $user = Auth::user();
+
+        if ($user->role === 'employee' && $user->id !== $id) {
+            throw new \Exception('Access denied: You can only view your own data.');
+        }
+        
+        return Employeer::with('user')->findOrFail($id);
     }
 
     public function getAllEmployeersWithUsers()
