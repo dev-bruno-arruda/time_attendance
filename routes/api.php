@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeerController;
 use App\Http\Middleware\RestrictEmployeerAccess;
 
+
 Route::post('/login', [AuthController::class, 'login']);
 
 #protected routes
