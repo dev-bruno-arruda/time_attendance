@@ -38,8 +38,8 @@ class AttendanceRecordService
 {
     $query = AttendanceRecord::query()
         ->join('users as u', 'attendance_records.user_id', '=', 'u.id')
-        ->join('employeers as e', 'u.id', '=', 'e.user_id')
-        ->leftJoin('employeers as managers', 'e.manager_id', '=', 'managers.id')
+        ->join('employees as e', 'u.id', '=', 'e.user_id')
+        ->leftJoin('employees as managers', 'e.manager_id', '=', 'managers.id')
         ->leftJoin('users as manager_users', 'managers.user_id', '=', 'manager_users.id')
         ->select([
             'attendance_records.id',

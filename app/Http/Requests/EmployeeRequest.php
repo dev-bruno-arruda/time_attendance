@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class EmployeerRequest extends FormRequest
+class EmployeeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -39,7 +39,7 @@ class EmployeerRequest extends FormRequest
                 'string',
                 'size:11',
                 'cpf',
-                "unique:employeers,cpf,{$employeerId}" // Ignora o CPF do employeer atual
+                "unique:employees,cpf,{$employeerId}" // Ignora o CPF do employeer atual
             ],
             'data.attributes.cep' => 'nullable|string|size:8',
             'data.attributes.address' => 'nullable|string|max:255',

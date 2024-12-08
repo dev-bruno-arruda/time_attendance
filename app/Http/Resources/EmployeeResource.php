@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class EmployeerResource extends JsonResource
+class EmployeeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -41,7 +41,7 @@ class EmployeerResource extends JsonResource
                 }),
             ],
             'links' => [
-                'self' => route('employeers.show', ['id' => $this->id]),
+                'self' => route('employees.show', ['id' => $this->id]),
             ],
         ];
     }

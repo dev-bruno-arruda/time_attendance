@@ -51,6 +51,14 @@
             <q-item-label>{{$t('attendance.title')}}</q-item-label>
           </q-item-section>
         </q-item>
+        <q-item to="/employee" active-class="q-item-no-link-highlighting">
+          <q-item-section avatar>
+            <q-icon name="employee"/>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{$t('employee.title')}}</q-item-label>
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 

@@ -3,14 +3,14 @@
 namespace Tests\Feature\Controllers;
 
 use App\Models\User;
-use App\Models\Employeer;
+use App\Models\Employee;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Database\Seeders\UserSeeder;
 use Tests\TestCase;
 use Mockery;
-use App\Services\EmployeerService;
+use App\Services\EmployeeService;
 
-class EmployeerControllerTest extends TestCase
+class EmployeeControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -20,13 +20,13 @@ class EmployeerControllerTest extends TestCase
         $this->seed(UserSeeder::class);
     }
 
-    public function test_index_retrieves_employeers()
+    public function test_index_retrieves_employees()
     {
         $admin = User::where('role', 'admin')->first();
         $token = $admin->createToken('test')->plainTextToken;
 
         // Criando alguns empregadores manualmente
-        Employeer::create([
+        Employee::create([
             'user_id' => $admin->id,
             'cpf' => '22272840051',
             'birth_date' => now()->subYears(30),
@@ -38,7 +38,7 @@ class EmployeerControllerTest extends TestCase
         ]);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-                         ->getJson('/api/employeers');
+                         ->getJson('/api/employees');
 
         $response->assertStatus(200)
                  ->assertJsonStructure([
@@ -79,7 +79,7 @@ class EmployeerControllerTest extends TestCase
         $data = [
             'data' => [
                 'attributes' => [
-                    'name' => 'New Employeer',
+                    'name' => 'New Employee',
                     'email' => 'employeertest@example.com',
                     'role' => 'employee',
                     'cpf' => '04391592029',
@@ -95,11 +95,11 @@ class EmployeerControllerTest extends TestCase
         ];
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-                         ->postJson('/api/employeers', $data);
+                         ->postJson('/api/employees', $data);
 
         $response->assertStatus(201)
                  ->assertJson([
-                     'message' => 'Employeer created successfully',
+                     'message' => 'Employee created successfully',
                      'status' => 'success',
                  ])
                  ->assertJsonStructure([
@@ -134,7 +134,7 @@ class EmployeerControllerTest extends TestCase
         $data = [
             'data' => [
                 'attributes' => [
-                    'name' => 'New Employeer',
+                    'name' => 'New Employee',
                     'email' => 'teste@teste.com',
                     'role' => 'employee',
                     'cpf' => '08727329089',
@@ -149,7 +149,7 @@ class EmployeerControllerTest extends TestCase
             ],
         ];
         $response = $this->withHeader('Authorization', "Bearer $token")
-                         ->postJson('/api/employeers', $data);
+                         ->postJson('/api/employees', $data);
         $response->assertStatus(403);
     }
 
@@ -158,7 +158,7 @@ class EmployeerControllerTest extends TestCase
         $admin = User::where('role', 'admin')->first();
         $token = $admin->createToken('test')->plainTextToken;
 
-        $employeer = Employeer::create([
+        $employeer = Employee::create([
             'user_id' => $admin->id,
             'cpf' => '70862571090',
             'birth_date' => now()->subYears(30),
@@ -170,7 +170,7 @@ class EmployeerControllerTest extends TestCase
         ]);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-                         ->getJson("/api/employeers/{$employeer->id}");
+                         ->getJson("/api/employees/{$employeer->id}");
 
         $response->assertStatus(200)
                  ->assertJsonStructure([
@@ -206,7 +206,7 @@ class EmployeerControllerTest extends TestCase
         $admin = User::where('role', 'admin')->first();
         $token = $admin->createToken('test')->plainTextToken;
 
-        $employeer = Employeer::create([
+        $employeer = Employee::create([
             'user_id' => $admin->id,
             'cpf' => '70862571090',
             'birth_date' => now()->subYears(30),
@@ -218,7 +218,7 @@ class EmployeerControllerTest extends TestCase
         ]);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-                         ->getJson("/api/employeers/9999");
+                         ->getJson("/api/employees/9999");
 
         $response->assertStatus(403);
     }
@@ -228,7 +228,7 @@ class EmployeerControllerTest extends TestCase
         $admin = User::where('role', 'admin')->first();
         $token = $admin->createToken('test')->plainTextToken;
 
-        $employeer = Employeer::create([
+        $employeer = Employee::create([
             'user_id' => $admin->id,
             'cpf' => '42342334044',
             'birth_date' => now()->subYears(30),
@@ -252,11 +252,11 @@ class EmployeerControllerTest extends TestCase
         ];
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-                         ->putJson("/api/employeers/{$employeer->id}", $data);
+                         ->putJson("/api/employees/{$employeer->id}", $data);
 
         $response->assertStatus(200)
                  ->assertJson([
-                     'message' => 'Employeer updated successfully',
+                     'message' => 'Employee updated successfully',
                      'status' => 'success',
                  ]);
     }
@@ -266,7 +266,7 @@ class EmployeerControllerTest extends TestCase
         $admin = User::where('role', 'admin')->first();
         $token = $admin->createToken('test')->plainTextToken;
 
-        $employeer = Employeer::create([
+        $employeer = Employee::create([
             'user_id' => $admin->id,
             'cpf' => '51378447050',
             'birth_date' => now()->subYears(30),
@@ -278,7 +278,7 @@ class EmployeerControllerTest extends TestCase
         ]);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-                         ->deleteJson("/api/employeers/{$employeer->id}");
+                         ->deleteJson("/api/employees/{$employeer->id}");
 
         $response->assertStatus(204);
     }
@@ -289,11 +289,11 @@ class EmployeerControllerTest extends TestCase
         $token = $admin->createToken('test')->plainTextToken;
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-                         ->deleteJson("/api/employeers/9999"); // ID inexistente
+                         ->deleteJson("/api/employees/9999"); // ID inexistente
 
         $response->assertStatus(404);
         $response->assertJson([
-            'message' => 'Employeer not found',
+            'message' => 'Employee not found',
             'status' => 'error',
         ]);
     }
@@ -303,7 +303,7 @@ class EmployeerControllerTest extends TestCase
         $admin = User::where('role', 'admin')->first();
         $token = $admin->createToken('test')->plainTextToken;
 
-        $employeer = Employeer::create([
+        $employeer = Employee::create([
             'user_id' => $admin->id,
             'cpf' => '42342334044',
             'birth_date' => now()->subYears(30),
@@ -314,14 +314,14 @@ class EmployeerControllerTest extends TestCase
             'city' => 'São Paulo',
         ]);
 
-        $mockService = Mockery::mock(EmployeerService::class);
-        $mockService->shouldReceive('softDeleteEmployeerAndDeactivateUser')
+        $mockService = Mockery::mock(EmployeeService::class);
+        $mockService->shouldReceive('softDeleteEmployeeAndDeactivateUser')
                     ->andThrow(new \Exception('Permission Denied'));
 
-        app()->instance(EmployeerService::class, $mockService);
+        app()->instance(EmployeeService::class, $mockService);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-                         ->deleteJson("/api/employeers/{$employeer->id}");
+                         ->deleteJson("/api/employees/{$employeer->id}");
 
         $response->assertStatus(403);
         $response->assertJson([

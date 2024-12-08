@@ -17,7 +17,7 @@ class AttendanceRecordTest extends TestCase
         parent::setUp();
 
         Artisan::call('db:seed', ['--class' => 'UserSeeder']);
-        Artisan::call('db:seed', ['--class' => 'EmployeerSeeder']);
+        Artisan::call('db:seed', ['--class' => 'EmployeeSeeder']);
         Artisan::call('db:seed', ['--class' => 'AttendanceRecordSeeder']);
     }
 

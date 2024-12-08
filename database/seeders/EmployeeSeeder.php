@@ -2,18 +2,18 @@
 
 namespace Database\Seeders;
 
-use App\Models\Employeer;
+use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
-class EmployeerSeeder extends Seeder
+class EmployeeSeeder extends Seeder
 {
     public function run()
     {
         $adminUser = User::where('email', 'admin@example.com')->first();
         $employeeUser = User::where('email', 'employee@example.com')->first();
 
-        Employeer::create([
+        Employee::create([
             'user_id' => $adminUser->id,
             'birth_date' => '1980-01-01',
             'cpf' => '49559488040',
@@ -25,7 +25,7 @@ class EmployeerSeeder extends Seeder
             'manager_id' => null,
         ]);
 
-        Employeer::create([
+        Employee::create([
             'user_id' => $employeeUser->id,
             'birth_date' => '1990-05-15',
             'cpf' => '56263628006',

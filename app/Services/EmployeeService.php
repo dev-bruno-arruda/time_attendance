@@ -1,24 +1,24 @@
 <?php
-// App\Services\EmployeerService.php
+// App\Services\EmployeeService.php
 
 namespace App\Services;
 
-use App\Models\Employeer;
+use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
-class EmployeerService extends BaseService
+class EmployeeService extends BaseService
 {
     public function __construct(
-        protected Employeer $employeer,
+        protected Employee $employeer,
     )
     {
         parent::__construct($employeer);
     }
 
-    public function findEmployeerWithUser($id)
+    public function findEmployeeWithUser($id)
     {
         return $this->employeer->where('id', $id)
             ->with('user')
@@ -26,7 +26,7 @@ class EmployeerService extends BaseService
     }
 
      
-    public function getEmployeer(int $id)
+    public function getEmployee(int $id)
     {
         $user = Auth::user();
 
@@ -34,7 +34,7 @@ class EmployeerService extends BaseService
             throw new \Exception('You do not have permission to access this resource', 403);
         }
         
-        return Employeer::with('user')->findOrFail($id);
+        return Employee::with('user')->findOrFail($id);
     }
 
     private function hasPermission($user, int $id): bool
@@ -42,7 +42,7 @@ class EmployeerService extends BaseService
         return !($user->role === 'employee' && $user->id !== $id);
     }
 
-    public function getAllEmployeersWithUsers()
+    public function getAllEmployeesWithUsers()
     {
         return $this->employeer->with('user')->get();
     }
@@ -77,7 +77,7 @@ class EmployeerService extends BaseService
         }
     }
 
-    public function updateEmployeer(array $data, int $id)
+    public function updateEmployee(array $data, int $id)
     {
         if (!$this->hasPermission(Auth::user(), $id)) {
             throw new \Exception('You do not have permission to access this resource', 403);
@@ -121,9 +121,9 @@ class EmployeerService extends BaseService
      * @param int $id
      * @return void
      */
-    public function softDeleteEmployeerAndDeactivateUser(int $id)
+    public function softDeleteEmployeeAndDeactivateUser(int $id)
     {
-        $employeer = Employeer::findOrFail($id);
+        $employeer = Employee::findOrFail($id);
 
         $employeer->delete();
 
