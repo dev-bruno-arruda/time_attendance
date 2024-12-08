@@ -15,14 +15,13 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::get('/employeers/{id}', [EmployeerController::class, 'show'])->name('employeers.show');
     Route::put('/employeers/{id}', [EmployeerController::class, 'update'])->name('employeers.update');
+    Route::put('/employeers/{id}/password', [AuthController::class, 'updatePassword'])->name('updatePassword');
     
     // Only admin can access this routes
     Route::middleware([RestrictEmployeerAccess::class])->group(function () {
         Route::get('/employeers', [EmployeerController::class, 'index'])->name('employeers.index');
         Route::post('/employeers', [EmployeerController::class, 'store'])->name('employeers.store');
         Route::delete('/employeers/{id}', [EmployeerController::class, 'destroy'])->name('employeers.destroy');
-    
-        
     });
     
 });

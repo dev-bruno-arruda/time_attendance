@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
 
 class AuthService 
 {
@@ -60,15 +61,23 @@ class AuthService
      * @return void
      * @throws ValidationException
      */
-    public function updatePassword(User $user, string $currentPassword, string $newPassword, bool $isAdmin = false): void
+    public function updatePassword(User $user, string $currentPassword, string $newPassword): void
     {
-        if (!$isAdmin && !Hash::check($currentPassword, $user->password)) {
+        if ($user->id !== Auth::id() && Auth::user()->role !== 'admin') {
             throw ValidationException::withMessages([
-                'current_password' => ['Password is incorrect.'],
+                'current_password' => ['You can only update your own password.'],
             ]);
         }
 
+        if ($user->id === Auth::id() && !Hash::check($currentPassword, $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => ['Error updating password.'],
+            ]);
+        }
+                
         $user->password = Hash::make($newPassword);
         $user->save();
     }
+    
+    
 }

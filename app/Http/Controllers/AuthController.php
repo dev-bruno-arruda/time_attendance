@@ -9,7 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -47,8 +47,7 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        
-            $this->authService->logout($request);
+        $this->authService->logout($request);
         
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
@@ -74,16 +73,16 @@ class AuthController extends Controller
         );
     }
 
-    public function updatePassword(AuthRequest $request)
+    public function updatePassword(Request $request, $id)
     {
-        $validated = $request->validated();
+        $data = $request->input('data');
+        $currentPassword = $data['current_password'];
+        $newPassword = $data['new_password'];
+    
+        $userToUpdate = User::findOrFail($id);
         
-        $user = Auth::user();
+        $this->authService->updatePassword($userToUpdate, $currentPassword, $newPassword);
         
-        $isAdmin = $user->role === 'admin' ? true : false;
-
-        $this->authService->updatePassword($user, $validated['current_password'], $validated['new_password'], $isAdmin);
-        
-        return response()->json(['message' => 'Senha atualizada com sucesso']);
     }
+    
 }
