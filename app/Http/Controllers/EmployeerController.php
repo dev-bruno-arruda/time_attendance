@@ -5,13 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EmployeerRequest;
 use App\Http\Resources\EmployeerResource;
-use App\Models\Employeer;
 use App\Services\EmployeerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Http\Request;
-
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 class EmployeerController extends Controller
 {
     protected EmployeerService $employeerService;
@@ -103,7 +100,7 @@ class EmployeerController extends Controller
             return response()->json([
                 'message' => $e->getMessage(),
                 'status' => 'error',
-            ], 400);
+            ], 422);
         }
     }
 
@@ -112,9 +109,26 @@ class EmployeerController extends Controller
      */
     public function destroy($id): JsonResponse
     {
-        $employeer = Employeer::findOrFail($id);
-        $this->employeerService->delete($employeer->id);
-
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        try {
+            $this->employeerService->softDeleteEmployeerAndDeactivateUser($id);
+        
+            return response()->json([
+                'message' => 'Employeer deleted successfully',
+                'status' => 'success',
+            ], 204);
+        } 
+        catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Employeer not found',
+                'status' => 'error',
+            ], 404);
+        } 
+        catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => 'error',
+            ], 403);
+        }
     }
+        
 }

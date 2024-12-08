@@ -20,7 +20,6 @@ class AuthService
     public function login(string $email, string $password): string
     {
         $user = User::where('email', $email)->first();
-        Log::info($user);
 
         if (!$user || !Hash::check($password, $user->password)) {
             throw ValidationException::withMessages([

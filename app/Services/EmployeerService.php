@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+
 class EmployeerService extends BaseService
 {
     public function __construct(
@@ -112,6 +113,24 @@ class EmployeerService extends BaseService
         } catch (\Exception $e) {
             DB::rollBack();
             throw new \Exception($e->getMessage());
+        }
+    }
+
+    /**
+     * Delete a employeer (soft delete) and deactivate the associated user.
+     * @param int $id
+     * @return void
+     */
+    public function softDeleteEmployeerAndDeactivateUser(int $id)
+    {
+        $employeer = Employeer::findOrFail($id);
+
+        $employeer->delete();
+
+        if ($employeer->user) {
+            $user = $employeer->user;
+            $user->is_active = false;
+            $user->save();
         }
     }
 

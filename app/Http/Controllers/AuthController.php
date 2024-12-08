@@ -32,8 +32,6 @@ class AuthController extends Controller
         try {
             $token = $this->authService->login($request->email, $request->password);
         } catch (\Exception $e) {
-            Log::error('Login failed: ' . $e->getMessage());
-
             return response()->json([
                 'message' => 'Login fail',
                 'status' => 'error'

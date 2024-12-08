@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware([RestrictEmployeerAccess::class])->group(function () {
         Route::get('/employeers', [EmployeerController::class, 'index'])->name('employeers.index');
         Route::post('/employeers', [EmployeerController::class, 'store'])->name('employeers.store');
+        Route::delete('/employeers/{id}', [EmployeerController::class, 'destroy'])->name('employeers.destroy');
     
         
     });
