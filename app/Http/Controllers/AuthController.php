@@ -6,7 +6,6 @@ use App\Services\AuthService;
 use App\Http\Requests\AuthRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Log;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
