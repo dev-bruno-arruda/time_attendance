@@ -10,6 +10,7 @@ use App\Services\EmployeerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Request;
 
 class EmployeerController extends Controller
 {
@@ -86,10 +87,24 @@ class EmployeerController extends Controller
      */
     public function update(EmployeerRequest $request, $id): JsonResponse | JsonResource
     {
-        $employeer = Employeer::findOrFail($id);
-        $employeer->update($request->validated());
+        try {
+            $validated = $request->validated();
+            $data = $validated['data']['attributes'];
 
-        return new EmployeerResource($employeer);
+            $employeer = $this->employeerService->updateEmployeer($data, $id);
+
+            return response()->json([
+                'message' => 'Employeer updated successfully',
+                'status' => 'success',
+                'data' => new EmployeerResource($employeer)
+            ], 200, [], JSON_PRETTY_PRINT);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => 'error',
+            ], 400);
+        }
     }
 
     /**

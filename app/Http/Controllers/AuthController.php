@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -74,5 +75,18 @@ class AuthController extends Controller
             ],
             Response::HTTP_OK
         );
+    }
+
+    public function updatePassword(AuthRequest $request)
+    {
+        $validated = $request->validated();
+        
+        $user = Auth::user();
+        
+        $isAdmin = $user->role === 'admin' ? true : false;
+
+        $this->authService->updatePassword($user, $validated['current_password'], $validated['new_password'], $isAdmin);
+        
+        return response()->json(['message' => 'Senha atualizada com sucesso']);
     }
 }

@@ -52,4 +52,25 @@ class AuthService
     {
         return $request->user();
     }
+
+    /**
+     * Update the user's password.
+     *
+     * @param \App\Models\User $user
+     * @param string $currentPassword
+     * @param string $newPassword
+     * @return void
+     * @throws ValidationException
+     */
+    public function updatePassword(User $user, string $currentPassword, string $newPassword, bool $isAdmin = false): void
+    {
+        if (!$isAdmin && !Hash::check($currentPassword, $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => ['Password is incorrect.'],
+            ]);
+        }
+
+        $user->password = Hash::make($newPassword);
+        $user->save();
+    }
 }

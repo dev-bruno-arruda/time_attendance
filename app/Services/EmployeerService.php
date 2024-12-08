@@ -12,7 +12,6 @@ class EmployeerService extends BaseService
 {
     public function __construct(
         protected Employeer $employeer,
-        protected User $user
     )
     {
         parent::__construct($employeer);
@@ -30,11 +29,16 @@ class EmployeerService extends BaseService
     {
         $user = Auth::user();
 
-        if ($user->role === 'employee' && $user->id !== $id) {
-            throw new \Exception('Access denied: You can only view your own data.');
+        if (!$this->hasPermission($user, $id)) {
+            throw new \Exception('You do not have permission to access this resource', 403);
         }
         
         return Employeer::with('user')->findOrFail($id);
+    }
+
+    private function hasPermission($user, int $id): bool
+    {
+        return !($user->role === 'employee' && $user->id !== $id);
     }
 
     public function getAllEmployeersWithUsers()
@@ -71,4 +75,44 @@ class EmployeerService extends BaseService
             throw new \Exception($e->getMessage());
         }
     }
+
+    public function updateEmployeer(array $data, int $id)
+    {
+        if (!$this->hasPermission(Auth::user(), $id)) {
+            throw new \Exception('You do not have permission to access this resource', 403);
+        }
+        try {
+            DB::beginTransaction();
+            $employeer = $this->employeer->findOrFail($id);
+
+            $userData = [
+                'name' => $data['name'] ?? $employeer->user->name,
+                'email' => $data['email'] ?? $employeer->user->email,
+                'role' => $data['role'] ?? $employeer->user->role,
+            ];
+
+            $employeer->user->update($userData);
+
+            $employeerData = [
+                'cpf' => $data['cpf'] ?? $employeer->cpf,
+                'birth_date' => $data['birth_date'] ?? $employeer->birth_date,
+                'cep' => $data['cep'] ?? $employeer->cep,
+                'address' => $data['address'] ?? $employeer->address,
+                'number' => $data['number'] ?? $employeer->number,
+                'state' => $data['state'] ?? $employeer->state,
+                'city' => $data['city'] ?? $employeer->city,
+                'manager_id' => $data['manager_id'] ?? $employeer->manager_id,
+            ];
+
+            $employeer->update($employeerData);
+
+            DB::commit();
+            return $employeer;
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \Exception($e->getMessage());
+        }
+    }
+
 }

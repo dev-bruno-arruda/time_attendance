@@ -22,17 +22,29 @@ class EmployeerRequest extends FormRequest
      */
     public function rules(): array
     {
+        $employeerId = $this->route('id'); // ID do employeer a ser atualizado
+
         return [
             'data.attributes.user_id' => 'exists:users,id',
             'data.attributes.name' => 'required|string|max:255',
-            'data.attributes.email' => 'required|email|unique:users,email,' . $this->id,
+            'data.attributes.email' => [
+                'required',
+                'email',
+                "unique:users,email,{$employeerId},id", // Ignora o email do employeer atual
+            ],
             'data.attributes.role' => 'required|string|in:admin,employee',
             'data.attributes.birth_date' => 'nullable|date|before:today',
-            'data.attributes.cpf' => 'required|string|size:11|cpf|unique:employeers,cpf,' . $this->id  ,
+            'data.attributes.cpf' => [
+                'required',
+                'string',
+                'size:11',
+                'cpf',
+                "unique:employeers,cpf,{$employeerId}" // Ignora o CPF do employeer atual
+            ],
             'data.attributes.cep' => 'nullable|string|size:8',
             'data.attributes.address' => 'nullable|string|max:255',
             'data.attributes.number' => 'nullable|string|max:10',
-            'data.attributes.state' => 'nullable|string|uf|size:2',
+            'data.attributes.state' => 'nullable|string|size:2',
             'data.attributes.city' => 'nullable|string|max:100',
             'data.attributes.manager_id' => 'nullable|exists:users,id',
         ];
