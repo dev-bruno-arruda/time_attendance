@@ -40,8 +40,22 @@ class EmployeerController extends Controller
      */
     public function store(EmployeerRequest $request): JsonResponse | JsonResource
     {
-        $employeer = $this->employeerService->create($request->validated());
-        return new EmployeerResource($employeer);
+        try
+        {
+            $validated = $request->validated();
+            $data = $validated['data']['attributes'];
+            $employeer = $this->employeerService->createWithUser($data);
+            return response()->json([
+                'message' => 'Employeer created successfully',
+                'status' => 'success',
+                'data' => new EmployeerResource($employeer)
+            ], 201, [], JSON_PRETTY_PRINT);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => 'error',
+            ], 403);
+        }
     }
 
     /**

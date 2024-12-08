@@ -6,6 +6,7 @@ namespace App\Services;
 use App\Models\Employeer;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class EmployeerService extends BaseService
 {
@@ -43,24 +44,31 @@ class EmployeerService extends BaseService
 
     public function createWithUser(array $data)
     {
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-            'role' => $data['role']
-        ]);
-        $employeer = $this->employeer->create([
-            'user_id' => $user->id,
-            'name' => $data['birth_date'],
-            'cpf' => $data['cpf'],
-            'cep' => $data['cep'],
-            'address' => $data['address'],
-            'number' => $data['number'],
-            'state' => $data['state'],
-            'city' => $data['city'],
-            'manager_id' => $data['manager_id'],
-        ]);
-
-        return $employeer;
+        try
+        {
+            DB::beginTransaction();
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => bcrypt(env('DEFAULT_PASSWORD', 'Ticto@123')),
+                'role' => $data['role']
+            ]);
+            $employeer = $this->employeer->create([
+                'user_id' => $user->id,
+                'name' => $data['birth_date'],
+                'cpf' => $data['cpf'],
+                'cep' => $data['cep'],
+                'address' => $data['address'],
+                'number' => $data['number'],
+                'state' => $data['state'],
+                'city' => $data['city'],
+                'manager_id' => $data['manager_id'],
+            ]);
+            DB::commit();
+            return $employeer;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \Exception($e->getMessage());
+        }
     }
 }

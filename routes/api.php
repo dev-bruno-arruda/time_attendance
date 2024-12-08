@@ -17,6 +17,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Only admin can access this routes
     Route::middleware([RestrictEmployeerAccess::class])->group(function () {
         Route::get('/employeers', [EmployeerController::class, 'index'])->name('employeers.index');
+        Route::post('/employeers', [EmployeerController::class, 'store'])->name('employeers.store');
     
         
     });

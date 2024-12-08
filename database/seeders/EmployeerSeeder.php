@@ -16,7 +16,7 @@ class EmployeerSeeder extends Seeder
         Employeer::create([
             'user_id' => $adminUser->id,
             'birth_date' => '1980-01-01',
-            'cpf' => '12345678901',
+            'cpf' => '49559488040',
             'cep' => '01001000',
             'address' => 'Admin Street',
             'number' => '100',
@@ -28,7 +28,7 @@ class EmployeerSeeder extends Seeder
         Employeer::create([
             'user_id' => $employeeUser->id,
             'birth_date' => '1990-05-15',
-            'cpf' => '98765432100',
+            'cpf' => '56263628006',
             'cep' => '02002000',
             'address' => 'Employee Avenue',
             'number' => '200',

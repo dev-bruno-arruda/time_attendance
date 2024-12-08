@@ -31,7 +31,7 @@ class RestrictEmployeerAccess
             }
 
             return response()->json([
-                'message' => 'Access denied: You can only view your own data.',
+                'message' => 'Access denied.',
                 'status' => 'error'
             ], Response::HTTP_FORBIDDEN);
         }
