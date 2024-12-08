@@ -13,6 +13,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [AuthController::class, 'profile'])->name('user.show');
     Route::post('/logout', [AuthController::class, 'logout']);
     
+    //employeer routes
     Route::get('/employeers/{id}', [EmployeerController::class, 'show'])->name('employeers.show');
     Route::put('/employeers/{id}', [EmployeerController::class, 'update'])->name('employeers.update');
     Route::put('/employeers/{id}/password', [AuthController::class, 'updatePassword'])->name('updatePassword');
