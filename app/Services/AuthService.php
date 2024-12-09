@@ -17,7 +17,7 @@ class AuthService
      * @return string
      * @throws ValidationException
      */
-    public function login(string $email, string $password): string
+    public function login(string $email, string $password): array
     {
         $user = User::where('email', $email)->first();
 
@@ -26,8 +26,10 @@ class AuthService
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
-        
-        return $user->createToken(env('APP_NAME'))->plainTextToken;
+        $token = $user->createToken(env('APP_NAME'))->plainTextToken;
+        $role = $user->role;
+
+        return ['token' => $token, 'role' => $role];
     }
 
     /**

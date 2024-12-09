@@ -29,14 +29,14 @@ class AuthController extends Controller
     public function login(AuthRequest $request): JsonResponse
     {
         try {
-            $token = $this->authService->login($request->email, $request->password);
+            $response = $this->authService->login($request->email, $request->password);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Login fail',
                 'status' => 'error'
             ], 422);
         }
-        return response()->json(['token' => $token], 200);
+        return response()->json($response, 200);
     }
 
     /**

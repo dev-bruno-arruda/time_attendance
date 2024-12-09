@@ -59,8 +59,6 @@ class AttendanceRecordService
         $query->where('attendance_records.registered_at', '<=', $filters['end_date']);
     }
 
-    $query->where('u.role', 'employee');
-
     return $query->get();
 }
 
