@@ -9,16 +9,17 @@
           @click="toggleLeftDrawer"
           icon="menu"
           aria-label="Menu"
+          v-if="isAdmin"
         />
         <q-toolbar-title>
           Ticto Attendance and Time
         </q-toolbar-title>
         <q-space/>
         <div class="q-gutter-sm row items-center no-wrap">
-                    <q-btn round dense flat color="white" :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
-                           @click="$q.fullscreen.toggle()"
-                           v-if="$q.screen.gt.sm">
-                    </q-btn>
+          <q-btn round dense flat color="white" :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
+                 @click="$q.fullscreen.toggle()"
+                 v-if="$q.screen.gt.sm">
+          </q-btn>
           <q-btn round flat>
             <q-avatar size="26px">
               <img src="https://cdn.quasar.dev/img/boy-avatar.png">
@@ -51,12 +52,12 @@
             <q-item-label>{{$t('attendance.title')}}</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item to="/employee" active-class="q-item-no-link-highlighting">
+        <q-item v-if="isAdmin" to="/employees" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
-            <q-icon name="employee"/>
+            <q-icon name="badge"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('employee.title')}}</q-item-label>
+            <q-item-label>{{$t('employees.title')}}</q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
@@ -70,10 +71,10 @@
 
 <script>
 import EssentialLink from 'components/EssentialLink.vue'
+import { defineComponent, ref, computed } from 'vue'
+import { useQuasar } from "quasar"
+import { useI18n } from "vue-i18n"
 
-import {defineComponent, ref} from 'vue'
-import {useQuasar} from "quasar";
-import {useI18n} from "vue-i18n";
 export default defineComponent({
   name: 'MainLayout',
 
@@ -84,22 +85,29 @@ export default defineComponent({
   setup() {
     const leftDrawerOpen = ref(false)
     const $q = useQuasar()
-    const {t} = useI18n()
+    const { t } = useI18n()
+
+    const isAdmin = computed(() => {
+      const role = JSON.parse(localStorage.getItem('role'))
+      return role === 'admin'
+    })
+
+    const toggleLeftDrawer = () => {
+      leftDrawerOpen.value = !leftDrawerOpen.value
+    }
 
     return {
       $q,
       leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      },
-      t
+      toggleLeftDrawer,
+      t,
+      isAdmin, // Agora isAdmin é uma propriedade computada
     }
   }
 })
 </script>
 
 <style>
-
 /* FONT AWESOME GENERIC BEAT */
 .fa-beat {
   animation: fa-beat 5s ease infinite;
@@ -131,5 +139,4 @@ export default defineComponent({
     transform: scale(1);
   }
 }
-
 </style>

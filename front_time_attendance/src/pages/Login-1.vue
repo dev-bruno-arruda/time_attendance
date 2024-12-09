@@ -83,8 +83,8 @@ export default defineComponent({
 
       try {
         const response = await login({ email: email.value, password: password.value })
-        console.log("Logado com sucesso", response)
         localStorage.setItem('token', response.token)
+        localStorage.setItem('role', JSON.stringify(response.role))
         router.push('/dashboard') // Redireciona
       } catch (error) {
         errorMessage.value = 'Invalid username or password. Please try again.'

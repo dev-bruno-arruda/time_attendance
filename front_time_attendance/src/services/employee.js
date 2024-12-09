@@ -1,12 +1,13 @@
 import UseApi from 'src/composables/UseApi';
 
 
-export default function AttendanceRecordService() {
-  const { list, post, getByDates} = UseApi('employees');
+export default function EmployeeService() {
+  const { list, post, update, getById} = UseApi('employees');
 
   return {
     list,
     post,
-    getByDates,
+    update,
+    getById,
   }
 }

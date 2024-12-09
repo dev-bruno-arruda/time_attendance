@@ -9,7 +9,7 @@
       <template v-slot:top>
         <span class="text-h5">{{ $t('employees.title') }}</span>
         <q-space />
-        <q-btn color="primary" :label="$t('btns.new')" :to="{ name: 'formEmployees' }"/>
+        <q-btn color="primary" :label="$t('btns.new')" :to="{ name: 'EmployeeForm' }"/>
       </template>
       <template v-slot:body-cell-actions="props">
         <q-td :props="props" class="q-gutter-sm" style="width: 100px;">
@@ -17,7 +17,7 @@
             color="primary"
             icon="edit"
             dense size="sm"
-            :to="{ name: 'formEmployees', params: { id: props.row.id } }"
+            :to="{ name: 'EmployeeForm', params: { id: props.row.id } }"
           >
             <q-tooltip>
               {{ $t('btns.edit') }}
@@ -42,12 +42,12 @@
 
 <script>
 import { defineComponent, ref, onMounted, computed } from 'vue';
-import employeesService from 'src/services/employees';
+import employeesService from 'src/services/employee';
 import { notifyError, notifySuccess } from 'boot/helpers';
 import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
-  name: 'ListEmployees',
+  name: 'EmployeesList',
   setup() {
     const employees = ref([]);
     const { list, remove } = employeesService();
@@ -67,23 +67,35 @@ export default defineComponent({
     });
 
     const getEmployees = async () => {
-      try {
-        const employeesList = await list();
-        employees.value = employeesList.map(employee => ({
-          ...employee,
-          manager: employee.manager_id ? employee.manager.name : ''
+    try {
+      const response = await list();
+   
+      if (Array.isArray(response)) {
+        employees.value = response.map(employee => ({
+          id: employee.id,
+          name: employee.attributes.name,
+          email: employee.attributes.email,
+          role: employee.attributes.role,
+          cpf: employee.attributes.cpf,
+          manager: employee.attributes.manager_id
         }));
-      } catch (error) {
-        notifyError(error.message);
+      } else {
+        console.error('No valid employee data found:', response);
+        notifyError('No employee data found.');
       }
-    };
+    } catch (error) {
+      console.error('Error fetching employees:', error);
+      notifyError(error.message);
+    }
+  };
+
 
     const deleteEmployee = async (id) => {
       try {
         const response = await remove(id);
         if (response.success) {
           notifySuccess(response.message);
-          getEmployees(); // Atualizar lista após a exclusão
+          getEmployees(); // Recarrega a lista após a exclusão
         }
       } catch (error) {
         notifyError(error.message);
@@ -98,6 +110,7 @@ export default defineComponent({
   },
 });
 </script>
+
 
 <style scoped>
 .q-table .q-gutter-sm {

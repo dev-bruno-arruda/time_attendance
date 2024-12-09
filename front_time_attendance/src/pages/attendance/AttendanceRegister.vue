@@ -38,7 +38,6 @@ export default defineComponent({
         }
       } catch (error) {
         notifyError(t('error_generic'))
-        console.log(error)
       }
     }
 

@@ -1,18 +1,29 @@
 import { api } from 'boot/axios'
 
 export default function UseApi(url) {
+  const getToken = () => {
+    return localStorage.getItem('auth_token')
+  }
+
   const list = async (params = {}) => {
     try {
-      const { data } = await api.get(url, { params })
+      const token = getToken();
+      const { data } = await api.get(url, {
+        params,
+        headers: { Authorization: `Bearer ${token}` }
+      })
       return data.data
     } catch (error) {
       handleError(error)
     }
   }
 
-  const getByDates = async (startDate, EndDate) => {
+  const getByDates = async (startDate, endDate) => {
     try {
-      const { data } = await api.get(`${url}/?start_date=${startDate}&end_date=${EndDate}`)
+      const token = getToken(); 
+      const { data } = await api.get(`${url}/?start_date=${startDate}&end_date=${endDate}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       return data
     } catch (error) {
       handleError(error)
@@ -21,7 +32,10 @@ export default function UseApi(url) {
 
   const getById = async (id) => {
     try {
-      const { data } = await api.get(`${url}/${id}`)
+      const token = getToken();
+      const { data } = await api.get(`${url}/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       return data
     } catch (error) {
       handleError(error)
@@ -30,8 +44,13 @@ export default function UseApi(url) {
 
   const post = async (form) => {
     try {
-      let config = { headers: { 'Content-Type': 'application/json' } };
-      const { data } = await api.post(url, form, config)
+      const token = getToken();
+      const { data } = await api.post(url, form, {
+        headers: { 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}` 
+        }
+      })
       return data
     } catch (error) {
       handleError(error)
@@ -40,17 +59,25 @@ export default function UseApi(url) {
 
   const update = async (id, form) => {
     try {
-      let config = { headers: { 'Content-Type': 'application/json' } };
-      const { data } = await api.put(`${url}/${id}`, form, config);
-      return data;
+      const token = getToken();
+      const { data } = await api.put(`${url}/${id}`, form, {
+        headers: { 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}` 
+        }
+      })
+      return data
     } catch (error) {
-      handleError(error);
+      handleError(error)
     }
-  };
+  }
 
   const remove = async (id) => {
     try {
-      const { data } = await api.delete(`${url}/${id}`)
+      const token = getToken();
+      const { data } = await api.delete(`${url}/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       return data
     } catch (error) {
       handleError(error)
@@ -67,9 +94,9 @@ export default function UseApi(url) {
   }
 
   const handleError = (error) => {
-    const errors = error.response?.data?.data
+    const errors = error.response.data.message
     if (errors) {
-      const message = Object.values(errors).flat().join('\n')
+      const message = error.response.data.message
       throw new Error(message)
     }
     throw new Error(error.message)
