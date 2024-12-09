@@ -28,6 +28,7 @@ Execute tests
 ```shell
 make test
 ```
+
 Test results in ./coverage
 
 ### Users after migration
@@ -44,6 +45,8 @@ Admin User
 User: admin@example.com
 Password: password123
 ```
+
+For new user, the default password is ticto123
 
 ### Ticto Time and Attendance Frontend
 
