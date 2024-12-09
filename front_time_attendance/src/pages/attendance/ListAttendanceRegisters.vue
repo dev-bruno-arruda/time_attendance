@@ -37,6 +37,7 @@ import { defineComponent, ref, onMounted, computed, onBeforeMount } from 'vue';
 import AttendanceRecordService from 'src/services/attendance'; 
 import { notifyError, notifySuccess } from 'boot/helpers';
 import { useI18n } from "vue-i18n";
+import { formatDate } from 'src/helpers';
 import TopCardWithSearch from "src/components/cards/TopCardWithSearch.vue";
 
 export default defineComponent({
@@ -57,13 +58,6 @@ export default defineComponent({
       { name: 'registered_at', label: t('registered_at'), field: 'registered_at', sortable: true, align: 'left' },
     ]);
 
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}/${month}/${year}`;
-    };
 
     const getAttendanceRegister = async (start_date = '', end_date = '') => {
       try {
