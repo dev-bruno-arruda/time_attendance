@@ -31,7 +31,8 @@ export default {
     enter_name: "Please enter a name.",
     enter_valid_email: "Please enter a valid email address.",
     enter_valid_cpf: "Please enter a valid CPF.",
-    enter_valid_cep: "Please enter a valid CEP."
+    enter_valid_cep: "Please enter a valid CEP.",
+    deleted_success: "Employee deleted successfully.",
   },
   name: "Name",
   email: "Email",
@@ -58,4 +59,5 @@ export default {
   },
   manager_name: "Manager Name",
   registered_at: "Registred at",
+  success: "Operation performed successfully",
 }

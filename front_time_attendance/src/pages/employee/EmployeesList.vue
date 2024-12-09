@@ -92,11 +92,14 @@ export default defineComponent({
 
     const deleteEmployee = async (id) => {
       try {
+        console.log('removendo')
         const response = await remove(id);
-        if (response.success) {
-          notifySuccess(response.message);
-          getEmployees(); // Recarrega a lista após a exclusão
+        console.log("response", response)
+        if (response =='' ) {
+          notifySuccess(t('employees.deleted_success'));
+          getEmployees()
         }
+
       } catch (error) {
         notifyError(error.message);
       }
