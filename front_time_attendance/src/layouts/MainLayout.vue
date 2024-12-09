@@ -44,7 +44,7 @@
             <q-item-label>Dashboard</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item to="/attendance-register" active-class="q-item-no-link-highlighting">
+        <q-item to="/attendance/register" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="timer"/>
           </q-item-section>
@@ -58,6 +58,14 @@
           </q-item-section>
           <q-item-section>
             <q-item-label>{{$t('employees.title')}}</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item v-if="isAdmin" to="/employees/attendance/registers" active-class="q-item-no-link-highlighting">
+          <q-item-section avatar>
+            <q-icon name="app_registration"/>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{$t('employees_attendance_registers.title')}}</q-item-label>
           </q-item-section>
         </q-item>
       </q-list>

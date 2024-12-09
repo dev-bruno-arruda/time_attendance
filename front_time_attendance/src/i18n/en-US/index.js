@@ -47,6 +47,15 @@ export default {
   submit: "Submit",
   error: {
     unexpected: "An unexpected error occurred"
-  }
-  
+  },
+  employees_attendance_registers: {
+    title: "Attendance Registers",
+    date: "Date",
+    employee: "Employee",
+    time: "Time",
+    attendance_registers: "Attendance Registers",
+    no_registers: "No registers found"
+  },
+  manager_name: "Manager Name",
+  registered_at: "Registred at",
 }

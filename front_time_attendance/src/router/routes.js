@@ -18,7 +18,8 @@ const routes = [
       { path: '', component: () => import('pages/Dashboard.vue') },
       { path: '/Dashboard2', component: () => import('pages/Dashboard2.vue') },
       { path: '/Profile', component: () => import('pages/UserProfile.vue') },
-      { path: '/attendance-register', name: 'AttendanceRegister', component: () => import('pages/attendance/AttendanceRegister.vue') },
+      { path: '/attendance/register', name: 'AttendanceRegister', component: () => import('pages/attendance/AttendanceRegister.vue') },
+      { path: '/employees/attendance/registers', name: 'ListAttendanceRegisters', component: () => import('pages/attendance/ListAttendanceRegisters.vue') },
       {
         path: '/employees',
         name: 'EmployeesList',

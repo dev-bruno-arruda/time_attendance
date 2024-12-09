@@ -17,7 +17,7 @@
 
 <script>
 import { defineComponent } from 'vue'
-import AttendanceRecordService from 'src/services/attendanceRecord' 
+import AttendanceRecordService from 'src/services/attendance' 
 import { notifyError, notifySuccess } from 'boot/helpers'
 import { useI18n } from "vue-i18n"
 
